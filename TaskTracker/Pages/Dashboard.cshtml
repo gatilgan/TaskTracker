@@ -1,0 +1,333 @@
+@page
+@model TaskTracker.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Görev Paneli";
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Görev Takip Sistemi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 24px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-logout {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .welcome-message {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-message h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message p {
+            color: #666;
+        }
+
+        .task-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-section h3 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+        }
+
+        .btn-add-task {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-add-task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .task-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .task-card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-title {
+            color: #333;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .task-dates {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            font-size: 13px;
+            color: #999;
+            align-items: center;
+        }
+
+        .task-date-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-date-label {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .task-status {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .status-active {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffe8a1;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .task-actions-inline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .success-message {
+            background-color: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+            font-size: 14px;
+        }
+
+        .task-actions {
+            display: none;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff8a80 0%, #d50000 100%);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(213, 0, 0, 0.3);
+        }
+    </style>
+    <script>
+        function confirmLogout(event) {
+            if (!confirm("Çıkış yapmak istediğinize emin misiniz?")) {
+                event.preventDefault();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📋 Görev Takip Sistemi</h1>
+        <div class="user-info">
+            <span>Hoş geldin, @Model.UserName</span>
+            <form method="post" action="/Dashboard?handler=Logout" style="margin: 0;" onsubmit="return confirmLogout(event);">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-logout">Çıkış Yap</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-message">
+            <h2>Merhaba, @Model.UserName! 👋</h2>
+            <p>Bugünün görevlerini yönetmek için buradayız.</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="success-message">
+                @Model.SuccessMessage
+            </div>
+        }
+
+        <div class="task-section">
+            <h3>Görevlerim</h3>
+            <a href="/AddTask" style="text-decoration: none;">
+                <button type="button" class="btn-add-task">+ Yeni Görev Ekle</button>
+            </a>
+
+            @if (Model.UserTasks.Count > 0)
+            {
+                <div class="task-list">
+                    @foreach (var task in Model.UserTasks)
+                    {
+                        <div class="task-card">
+                            <div class="task-title">@task.Title</div>
+                            @if (!string.IsNullOrEmpty(task.Description))
+                            {
+                                <div class="task-description">@task.Description</div>
+                            }
+                            <div class="task-dates">
+                                <div class="task-date-item">
+                                    <span class="task-date-label">📅 Başlangıç:</span>
+                                    <span>@task.TaskStartDate.ToString("dd.MM.yyyy HH:mm")</span>
+                                </div>
+                                <div class="task-date-item">
+                                    <span class="task-date-label">⏱️ Bitiş:</span>
+                                    <span>@task.TaskEndDate.ToString("dd.MM.yyyy HH:mm")</span>
+                                </div>
+                                <div class="task-date-item">
+                                    <span class="task-date-label">⏳ Süre:</span>
+                                    <span>@task.TaskDuration</span>
+                                </div>
+                                <div class="task-date-item">
+                                    <span class="task-date-label">📊 Durum:</span>
+                                    <span class="task-status @(task.IsCompleted ? "status-completed" : "status-active")">@task.Status</span>
+                                </div>
+                                <div class="task-actions-inline">
+                                    <a href="/EditTask?taskId=@task.TaskId" class="btn-edit">✏️ Düzenle</a>
+                                    <form method="post" action="/Dashboard?handler=DeleteTask" style="margin: 0;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="taskId" value="@task.TaskId" />
+                                        <button type="submit" class="btn-delete" onclick="return confirm('Bu görevi silmek istediğinize emin misiniz?')">🗑️ Sil</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <p>Henüz görev eklenmemiş. Başlamak için yukarıdaki butona tıklayın.</p>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
