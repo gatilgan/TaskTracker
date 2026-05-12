@@ -27,4 +27,4 @@ ASP.NET Core Razor Pages ve SQLite kullanılarak geliştirilmiş, modern ve kull
   4. Projeyi çalıştırın.
 
 📄 Lisans
-  Bu proje MIT Lisansı altında lisanslanmıştır.
+  Bu proje MIT Lisansı ile lisanslanmıştır.
