@@ -265,8 +265,7 @@
 
                 <div class="form-group">
                     <label for="IsCompleted">
-                        <input type="hidden" name="IsCompleted" value="false" />
-                        <input type="checkbox" id="IsCompleted" name="IsCompleted" asp-for="IsCompleted" value="true" />
+                        <input type="checkbox" id="IsCompleted" name="IsCompleted" asp-for="IsCompleted" value="true" @(Model.IsCompleted ? "checked" : "") />
                         Görev Tamamlandı
                     </label>
                 </div>

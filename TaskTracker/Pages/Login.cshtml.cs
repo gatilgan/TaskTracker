@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TaskTracker.Data;
-using TaskTracker.Models;
 using System.Security.Cryptography;
 using System.Text;
 

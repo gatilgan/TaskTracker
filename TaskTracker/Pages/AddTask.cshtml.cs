@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TaskTracker.Data;
-using TaskTracker.Models;
 
 namespace TaskTracker.Pages
 {
